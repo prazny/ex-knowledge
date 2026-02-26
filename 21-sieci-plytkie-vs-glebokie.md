@@ -301,3 +301,109 @@ graph TD
 | **Pamięć** | Brak stanu | Stan ukryty $\mathbf{h}_t$ | Attention na całą sekwencję |
 | **Głębokość** | 5-152+ warstw | 1-8 warstw (+ czas) | 6-96+ warstw |
 | **Kluczowa innowacja** | Współdzielenie wag, pooling | Bramki (LSTM/GRU) | Self-attention |
+
+## Wyzwania trenowania sieci głębokich
+
+Głębokość sieci wprowadza specyficzne problemy, które nie występują (lub są mniej dotkliwe) w sieciach płytkich:
+
+### 1. Zanikający i eksplodujący gradient
+
+Podczas propagacji wstecznej gradient jest mnożony przez wagi kolejnych warstw. Dla sieci o $L$ warstwach:
+
+$\frac{\partial \mathcal{L}}{\partial \mathbf{W}_1} = \frac{\partial \mathcal{L}}{\partial \mathbf{h}_L} \cdot \prod_{l=2}^{L} \frac{\partial \mathbf{h}_l}{\partial \mathbf{h}_{l-1}} \cdot \frac{\partial \mathbf{h}_1}{\partial \mathbf{W}_1}$
+
+Jeśli $\left\|\frac{\partial \mathbf{h}_l}{\partial \mathbf{h}_{l-1}}\right\| < 1$ dla wielu warstw, gradient zanika wykładniczo. Jeśli $> 1$, gradient eksploduje.
+
+**Rozwiązania:**
+- **ReLU** zamiast sigmoid/tanh — gradient nie zanika dla aktywacji > 0
+- **Inicjalizacja He/Xavier** — odpowiednie skalowanie wag początkowych
+- **Batch Normalization** — normalizacja aktywacji w każdej warstwie
+- **Residual connections (skip connections)** — gradient przepływa bezpośrednio przez shortcut
+
+### 2. Degradacja (degradation problem)
+
+Paradoksalnie, dodawanie warstw do sieci głębokiej może **pogorszyć** wyniki — nawet na zbiorze treningowym. Nie jest to overfitting, lecz problem optymalizacji: głębsza sieć jest trudniejsza do wytrenowania.
+
+**Rozwiązanie — ResNet (He et al., 2015):**
+
+Zamiast uczyć się mapowania $\mathbf{h}_l = F(\mathbf{h}_{l-1})$, sieć uczy się **residuum**:
+
+$\mathbf{h}_l = F(\mathbf{h}_{l-1}) + \mathbf{h}_{l-1}$
+
+Skip connection dodaje wejście bloku do jego wyjścia. Jeśli optymalna transformacja jest bliska identyczności, sieć musi nauczyć się jedynie małego residuum $F(\mathbf{h}_{l-1}) \approx \mathbf{0}$, co jest łatwiejsze.
+
+### 3. Koszt obliczeniowy
+
+Sieci głębokie wymagają znacznych zasobów obliczeniowych:
+
+| Model | Parametry | FLOPS (trenowanie) | GPU-godziny |
+|---|---|---|---|
+| AlexNet (2012) | 60 M | ~$10^{15}$ | ~75 |
+| ResNet-50 (2015) | 25 M | ~$10^{18}$ | ~600 |
+| BERT-Large (2018) | 340 M | ~$10^{19}$ | ~6 000 |
+| GPT-3 (2020) | 175 B | ~$10^{23}$ | ~355 000 |
+
+### 4. Overfitting
+
+Sieci głębokie mają ogromną liczbę parametrów, co zwiększa ryzyko nadmiernego dopasowania. Techniki przeciwdziałania:
+
+- **Dropout** — losowe wyłączanie neuronów podczas trenowania
+- **Regularyzacja L2** (weight decay) — kara za duże wagi
+- **Data augmentation** — sztuczne powiększanie zbioru treningowego
+- **Early stopping** — zatrzymanie trenowania, gdy błąd walidacyjny rośnie
+- **Label smoothing** — wygładzanie etykiet one-hot
+
+## Przykłady
+
+### Porównanie tabelaryczne: sieć płytka vs głęboka na zadaniu klasyfikacji obrazów
+
+| Aspekt | MLP (1 warstwa ukryta, 1024 neurony) | CNN (ResNet-18, 18 warstw) |
+|---|---|---|
+| **Zbiór danych** | CIFAR-10 (32×32, 10 klas) | CIFAR-10 (32×32, 10 klas) |
+| **Parametry** | ~3.2 M | ~11 M |
+| **Accuracy (test)** | ~55-58% | ~93-95% |
+| **Feature engineering** | Wymagane spłaszczenie obrazu | Automatyczna ekstrakcja cech |
+| **Invariancja na translację** | Brak | Tak (konwolucja + pooling) |
+| **Czas trenowania** | ~5 min (GPU) | ~30 min (GPU) |
+| **Generalizacja** | Słaba — nie rozumie struktury obrazu | Dobra — hierarchia cech |
+
+Sieć płytka (MLP) traktuje obraz jako płaski wektor pikseli i nie wykorzystuje przestrzennej struktury danych. CNN dzięki głębokości i konwolucji uczy się hierarchii cech, osiągając znacznie lepsze wyniki.
+
+### Wizualizacja hierarchii cech w CNN (na przykładzie rozpoznawania twarzy)
+
+```
+Warstwa 1 (krawędzie):          Warstwa 2 (tekstury):
+┌─────┐ ┌─────┐ ┌─────┐        ┌─────┐ ┌─────┐ ┌─────┐
+│ │ │ │ │ ─ ─ │ │ ╲ ╲ │        │░░░░░│ │▓▓▓▓▓│ │╱╲╱╲╱│
+│ │ │ │ │ ─ ─ │ │ ╲ ╲ │        │░░░░░│ │▓▓▓▓▓│ │╲╱╲╱╲│
+│ │ │ │ │ ─ ─ │ │ ╲ ╲ │        │░░░░░│ │▓▓▓▓▓│ │╱╲╱╲╱│
+└─────┘ └─────┘ └─────┘        └─────┘ └─────┘ └─────┘
+
+Warstwa 3 (części):             Warstwa 4 (obiekty):
+┌─────┐ ┌─────┐ ┌─────┐        ┌─────────────┐
+│ ◉   │ │  ▽  │ │ ╭─╮ │        │  ◉       ◉  │
+│     │ │ / \ │ │ │ │ │        │     ▽       │
+│     │ │     │ │ ╰─╯ │        │   ╭───╮     │
+└─────┘ └─────┘ └─────┘        │   ╰───╯     │
+  oko     nos    usta           └─────────────┘
+                                    twarz
+```
+
+Każda warstwa CNN buduje na cechach wyekstrahowanych przez warstwę poprzednią. Sieć płytka musiałaby nauczyć się rozpoznawać twarz bezpośrednio z pikseli — bez pośrednich reprezentacji krawędzi, tekstur i części.
+
+## Podsumowanie
+
+1. **Sieć płytka** (1-2 warstwy ukryte) jest uniwersalnym aproksymatorem (twierdzenie Cybenko), ale wymagana liczba neuronów może rosnąć wykładniczo ze złożonością problemu. Dobrze sprawdza się w prostych zadaniach z niskim wymiarem danych.
+
+2. **Sieć głęboka** (≥3 warstwy ukryte) realizuje **hierarchiczną ekstrakcję cech** — każda warstwa uczy się coraz bardziej abstrakcyjnych reprezentacji. Dzięki temu efektywniej reprezentuje złożone funkcje, wymagając mniejszej łącznej liczby parametrów.
+
+3. **Potrzeba wielu warstw** wynika z: (a) hierarchicznej struktury danych rzeczywistych, (b) wykładniczej oszczędności parametrów przy głębokiej kompozycji, (c) reużywalności cech niskopoziomowych, (d) stopniowego rozplątywania rozmaitości danych.
+
+4. **Główne architektury głębokie** to CNN (dane przestrzenne — obrazy), RNN/LSTM (dane sekwencyjne — tekst, mowa) i Transformer (uniwersalna architektura oparta na mechanizmie uwagi, dominująca we współczesnym AI).
+
+5. **Wyzwania trenowania** sieci głębokich obejmują zanikający/eksplodujący gradient, problem degradacji, wysoki koszt obliczeniowy i ryzyko overfittingu. Rozwiązania: ReLU, batch normalization, residual connections (ResNet), dropout, odpowiednia inicjalizacja wag.
+
+## Powiązane pytania
+
+- [Pytanie 20: Wyjaśnić specyfikę zastosowania sieci neuronowych w charakterze klasyfikatora uniwersalnego aproksymatora – podać przykłady obu rodzajów sieci.](20-klasyfikator-aproksymator.md)
+- [Pytanie 22: Algorytmy uczenia sieci głębokich. Na czym polega problem zanikającego gradientu i jak jest rozwiązywany?](22-zanikajacy-gradient.md)

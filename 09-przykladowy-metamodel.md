@@ -2,263 +2,204 @@
 
 ## Kluczowe pojęcia
 
-- **Metaklasa** — podstawowy element metamodelu definiujący typ elementu w języku modelowania. Metaklasa opisuje strukturę swoich instancji poprzez atrybuty (cechy o typie prostym) i referencje (powiązania z innymi metaklasami). W Ecore metaklasa jest reprezentowana przez `EClass`. Przykładowo, w metamodelu języka stanów metaklasami są `State` i `Transition`.
-- **Instancja** — konkretny element modelu będący realizacją (wystąpieniem) metaklasy. Relacja między instancją a metaklasą to `instanceOf` — instancja posiada wartości atrybutów i referencji zdefiniowanych w metaklasie. Na przykład stan `Locked` jest instancją metaklasy `State`, a przejście `coin` jest instancją metaklasy `Transition`.
-- **Diagram klas** — notacja graficzna UML służąca do przedstawiania metamodeli. Metaklasy są rysowane jako prostokąty z nazwą, atrybutami i operacjami. Relacje między metaklasami (asocjacje, kompozycje, dziedziczenie) są przedstawiane jako linie z odpowiednimi oznaczeniami (strzałki, romby, trójkąty).
-- **Relacje między metaklasami** — powiązania strukturalne definiujące, jak metaklasy współdziałają w metamodelu. Wyróżniamy: **asocjację** (luźne powiązanie), **kompozycję** (relacja część-całość z semantyką posiadania), **dziedziczenie** (hierarchia typów) oraz **referencję** (wskaźnik na inną metaklasę). Krotności na końcach relacji określają, ile instancji może uczestniczyć w powiązaniu.
+- **Metaklasa** — podstawowy element metamodelu definiujący typ elementu w języku modelowania. W UML metaklasa jest przedstawiana jako klasa na diagramie klas, oznaczona stereotypem `«metaclass»`. Metaklasa opisuje strukturę swoich instancji poprzez atrybuty i asocjacje. Przykładowo, w metamodelu języka stanów metaklasami są `State` i `Transition`.
+- **Instancja** — konkretny element modelu będący realizacją (wystąpieniem) metaklasy. Relacja między instancją a metaklasą to `«instanceOf»`. Na przykład stan `Locked` jest instancją metaklasy `State`, a przejście `coin` jest instancją metaklasy `Transition`.
+- **Diagram klas UML** — podstawowa notacja graficzna do przedstawiania metamodeli. Metaklasy rysujemy jako prostokąty podzielone na trzy sekcje: nazwa, atrybuty, operacje. Relacje między metaklasami przedstawiamy jako: asocjację (linia), kompozycję (wypełniony romb ♦), agregację (pusty romb ◇), generalizację (trójkąt △).
+- **Relacje między metaklasami** — powiązania strukturalne w metamodelu. W notacji UML wyróżniamy: **kompozycję** (relacja część-całość, wypełniony romb), **asocjację skierowaną** (strzałka →, odpowiednik referencji), **generalizację** (trójkąt, hierarchia typów). Krotności na końcach asocjacji (np. `1..*`, `0..1`) określają ograniczenia strukturalne.
 
-## Proces projektowania metamodelu
+## Proces projektowania metamodelu w UML
 
-Projektowanie metamodelu to systematyczny proces przekształcania wymagań dziedzinowych w formalną strukturę języka modelowania. Poniżej przedstawiono kluczowe etapy tego procesu.
+Projektowanie metamodelu to systematyczny proces przekształcania wymagań dziedzinowych w formalną strukturę języka modelowania. UML jest naturalnym wyborem do tego celu — sam standard UML jest zdefiniowany jako metamodel (opisany w dokumencie MOF/UML Infrastructure).
 
 ### Etap 1: Wybór dziedziny
 
 Pierwszym krokiem jest **określenie dziedziny**, dla której projektujemy język modelowania. Dziedzina powinna być:
 
 - **Dobrze zdefiniowana** — z jasno określonymi granicami i pojęciami
-- **Wystarczająco prosta** — aby metamodel składał się z 2-3 metaklas (zgodnie z wymaganiem pytania)
-- **Reprezentatywna** — aby ilustrować kluczowe konstrukcje metamodelowania (atrybuty, relacje, krotności)
+- **Wystarczająco prosta** — aby metamodel składał się z 2-3 metaklas
+- **Reprezentatywna** — aby ilustrować kluczowe konstrukcje UML (atrybuty, asocjacje, kompozycje, krotności)
 
-Przykłady odpowiednich dziedzin dla metamodelu z 2-3 metaklasami:
+Przykłady odpowiednich dziedzin:
 
-| Dziedzina | Metaklasy | Relacje |
+| Dziedzina | Metaklasy | Relacje UML |
 |---|---|---|
-| Język stanów (FSM) | `StateMachine`, `State`, `Transition` | kompozycja, referencja |
-| Język grafów | `Graph`, `Node`, `Edge` | kompozycja, referencja |
-| Język formularzy | `Form`, `Field`, `Validation` | kompozycja, referencja |
-| Język procesów | `Process`, `Activity`, `Flow` | kompozycja, referencja |
+| Język stanów (FSM) | `StateMachine`, `State`, `Transition` | kompozycja, asocjacja skierowana |
+| Język grafów | `Graph`, `Node`, `Edge` | kompozycja, asocjacja skierowana |
+| Język formularzy | `Form`, `Field`, `Validation` | kompozycja, asocjacja |
+| Język procesów | `Process`, `Activity`, `Flow` | kompozycja, asocjacja skierowana |
 
 ### Etap 2: Identyfikacja metaklas
 
-Dla wybranej dziedziny identyfikujemy **kluczowe pojęcia**, które staną się metaklasami. Każde pojęcie powinno:
+Dla wybranej dziedziny identyfikujemy **kluczowe pojęcia**, które staną się metaklasami na diagramie klas UML:
 
-1. **Reprezentować odrębny typ elementu** — nie być wariantem innego pojęcia
-2. **Posiadać własne atrybuty** — cechy odróżniające instancje
-3. **Uczestniczyć w relacjach** — być powiązane z innymi metaklasami
+1. **Reprezentują odrębny typ elementu** — nie są wariantem innego pojęcia
+2. **Posiadają własne atrybuty** — cechy odróżniające instancje
+3. **Uczestniczą w asocjacjach** — są powiązane z innymi metaklasami
 
 Proces identyfikacji:
 - Wypisz wszystkie pojęcia dziedzinowe
-- Odfiltruj pojęcia, które są atrybutami (wartościami prostymi) — np. „nazwa stanu" to atrybut, nie metaklasa
-- Odfiltruj pojęcia, które są instancjami, a nie typami — np. „stan początkowy" to instancja `State` z flagą `isInitial = true`
+- Odfiltruj pojęcia będące atrybutami (wartościami prostymi) — np. „nazwa stanu" to atrybut typu `String`, nie metaklasa
+- Odfiltruj pojęcia będące instancjami — np. „stan początkowy" to instancja `State` z `isInitial = true`
 - Pozostałe pojęcia to kandydaci na metaklasy
 
-### Etap 3: Definiowanie atrybutów
+### Etap 3: Definiowanie atrybutów (sekcja atrybutów klasy UML)
 
-Dla każdej metaklasy określamy **atrybuty** — cechy o typie prostym (String, Integer, Boolean itp.):
+Dla każdej metaklasy określamy atrybuty w notacji UML:
 
-- Każdy atrybut ma **nazwę**, **typ** i **krotność**
-- Atrybuty wymagane mają `lowerBound = 1`
-- Atrybuty opcjonalne mają `lowerBound = 0`
-- Atrybuty logiczne (flagi) służą do rozróżniania wariantów (np. `isInitial`, `isFinal`)
+```
+widoczność nazwa : typ [krotność] = wartośćDomyślna
+```
 
-### Etap 4: Definiowanie relacji
+Przykłady:
+- `+ name : String [1..1]` — atrybut wymagany
+- `+ guard : String [0..1]` — atrybut opcjonalny
+- `+ isInitial : Boolean [1..1] = false` — atrybut z wartością domyślną
 
-Między metaklasami definiujemy **relacje**, wybierając odpowiedni typ:
+### Etap 4: Definiowanie relacji (asocjacje UML)
 
-| Typ relacji | Kiedy stosować | Notacja UML |
+Między metaklasami definiujemy relacje, korzystając z notacji UML:
+
+| Typ relacji UML | Notacja | Kiedy stosować |
 |---|---|---|
-| **Kompozycja** | Element należy do kontenera i nie istnieje bez niego | Wypełniony romb (♦) |
-| **Referencja** | Element wskazuje na inny element, ale nie jest jego właścicielem | Strzałka (→) |
-| **Dziedziczenie** | Metaklasa jest specjalizacją innej metaklasy | Trójkąt (△) |
+| **Kompozycja** | Wypełniony romb ♦ po stronie kontenera | Element nie istnieje bez właściciela (np. State w StateMachine) |
+| **Asocjacja skierowana** | Strzałka → | Element wskazuje na inny, ale nie jest jego właścicielem (np. Transition → State) |
+| **Generalizacja** | Trójkąt △ po stronie nadklasy | Metaklasa jest specjalizacją innej (np. InitialState extends State) |
 
-Dla każdej relacji określamy **krotności** na obu końcach (np. `1..*`, `0..1`, `*`).
+Każda asocjacja ma:
+- **Nazwę roli** na każdym końcu (np. `source`, `target`)
+- **Krotność** (np. `1`, `0..*`, `1..*`)
+- **Nawigację** (strzałka wskazuje kierunek nawigacji)
 
 ## Przykładowy metamodel — język automatów stanowych (FSM)
 
 ### Wybór dziedziny
 
-Jako dziedzinę wybieramy **automaty stanowe** (Finite State Machines) — jeden z najbardziej klasycznych i intuicyjnych języków modelowania. Automat stanowy opisuje zachowanie systemu jako zbiór stanów i przejść między nimi.
+Jako dziedzinę wybieramy **automaty stanowe** (Finite State Machines) — klasyczny język modelowania zachowania systemu jako zbioru stanów i przejść.
 
 ### Identyfikacja metaklas
 
 Metamodel składa się z **trzech metaklas**:
 
 1. **`StateMachine`** — kontener główny, reprezentujący cały automat
-2. **`State`** — stan automatu (w tym stan początkowy i stany końcowe)
+2. **`State`** — stan automatu (w tym stan początkowy i końcowy)
 3. **`Transition`** — przejście między stanami, wyzwalane zdarzeniem
 
-### Metamodel — diagram klas (Mermaid)
+### Diagram klas UML (metamodel)
 
 ```mermaid
 classDiagram
     class StateMachine {
-        +name: String [1..1]
+        «metaclass»
+        + name : String [1..1]
     }
     class State {
-        +name: String [1..1]
-        +isInitial: Boolean [1..1]
-        +isFinal: Boolean [1..1]
+        «metaclass»
+        + name : String [1..1]
+        + isInitial : Boolean [1..1] = false
+        + isFinal : Boolean [1..1] = false
     }
     class Transition {
-        +event: String [1..1]
-        +guard: String [0..1]
-        +action: String [0..1]
+        «metaclass»
+        + event : String [1..1]
+        + guard : String [0..1]
+        + action : String [0..1]
     }
 
-    StateMachine "1" *-- "*" State : states
-    StateMachine "1" *-- "*" Transition : transitions
-    Transition --> "1" State : source
-    Transition --> "1" State : target
+    StateMachine "1" *-- "0..*" State : states
+    StateMachine "1" *-- "0..*" Transition : transitions
+    Transition "0..*" --> "1" State : source
+    Transition "0..*" --> "1" State : target
 ```
+
+**Legenda notacji UML:**
+- `*--` = kompozycja (wypełniony romb ♦ po stronie `StateMachine`)
+- `-->` = asocjacja skierowana (nawigacja od `Transition` do `State`)
+- `[1..1]` = dokładnie jeden, `[0..*]` = zero lub więcej, `[0..1]` = opcjonalny
 
 ### Opis metaklas
 
 #### Metaklasa `StateMachine`
 
-| Cecha | Wartość |
+| Cecha UML | Wartość |
 |---|---|
-| **Rola** | Kontener główny — element korzeniowy modelu |
-| **Atrybuty** | `name: String [1..1]` — nazwa automatu |
-| **Kompozycje** | `states: State [0..*]` — stany należące do automatu |
-| | `transitions: Transition [0..*]` — przejścia należące do automatu |
-| **Semantyka** | Reprezentuje kompletny automat stanowy. Usunięcie `StateMachine` powoduje kaskadowe usunięcie wszystkich stanów i przejść. |
+| **Stereotyp** | `«metaclass»` |
+| **Atrybuty** | `+ name : String [1..1]` |
+| **Kompozycje** | `states : State [0..*]` — stany należące do automatu |
+| | `transitions : Transition [0..*]` — przejścia należące do automatu |
+| **Semantyka** | Element korzeniowy modelu. Usunięcie `StateMachine` powoduje kaskadowe usunięcie wszystkich stanów i przejść (semantyka kompozycji UML). |
 
 #### Metaklasa `State`
 
-| Cecha | Wartość |
+| Cecha UML | Wartość |
 |---|---|
-| **Rola** | Stan automatu — wierzchołek w grafie stanów |
-| **Atrybuty** | `name: String [1..1]` — unikalna nazwa stanu |
-| | `isInitial: Boolean [1..1]` — czy stan jest stanem początkowym (domyślnie `false`) |
-| | `isFinal: Boolean [1..1]` — czy stan jest stanem końcowym (domyślnie `false`) |
-| **Kontener** | Należy do `StateMachine` przez kompozycję `states` |
-| **Semantyka** | Reprezentuje dyskretny stan, w którym może znajdować się system. Dokładnie jeden stan powinien mieć `isInitial = true`. |
+| **Stereotyp** | `«metaclass»` |
+| **Atrybuty** | `+ name : String [1..1]` — unikalna nazwa stanu |
+| | `+ isInitial : Boolean [1..1] = false` — flaga stanu początkowego |
+| | `+ isFinal : Boolean [1..1] = false` — flaga stanu końcowego |
+| **Kompozycja zwrotna** | Należy do `StateMachine` (rola `states`) |
+| **Semantyka** | Wierzchołek w grafie stanów. Dokładnie jeden stan powinien mieć `isInitial = true`. |
 
 #### Metaklasa `Transition`
 
-| Cecha | Wartość |
+| Cecha UML | Wartość |
 |---|---|
-| **Rola** | Przejście między stanami — krawędź w grafie stanów |
-| **Atrybuty** | `event: String [1..1]` — zdarzenie wyzwalające przejście |
-| | `guard: String [0..1]` — opcjonalny warunek strzegący (warunek logiczny) |
-| | `action: String [0..1]` — opcjonalna akcja wykonywana przy przejściu |
-| **Referencje** | `source: State [1..1]` — stan źródłowy |
-| | `target: State [1..1]` — stan docelowy |
-| **Kontener** | Należy do `StateMachine` przez kompozycję `transitions` |
-| **Semantyka** | Reprezentuje przejście ze stanu `source` do stanu `target`, wyzwalane zdarzeniem `event`. Opcjonalnie przejście może mieć warunek `guard` i akcję `action`. |
+| **Stereotyp** | `«metaclass»` |
+| **Atrybuty** | `+ event : String [1..1]` — zdarzenie wyzwalające |
+| | `+ guard : String [0..1]` — warunek strzegący |
+| | `+ action : String [0..1]` — akcja przy przejściu |
+| **Asocjacje skierowane** | `source : State [1..1]` — stan źródłowy |
+| | `target : State [1..1]` — stan docelowy |
+| **Kompozycja zwrotna** | Należy do `StateMachine` (rola `transitions`) |
+| **Semantyka** | Krawędź w grafie stanów. Przejście ze stanu `source` do `target` wyzwalane zdarzeniem `event`. |
 
-### Relacje w metamodelu
+### Tabela asocjacji UML
 
-| Relacja | Typ | Krotność | Opis |
-|---|---|---|---|
-| `StateMachine → State` | Kompozycja | `1..*` (co najmniej 1 stan) | Automat zawiera stany |
-| `StateMachine → Transition` | Kompozycja | `0..*` | Automat zawiera przejścia |
-| `Transition → State (source)` | Referencja | `1..1` | Przejście ma dokładnie jeden stan źródłowy |
-| `Transition → State (target)` | Referencja | `1..1` | Przejście ma dokładnie jeden stan docelowy |
+| Asocjacja | Typ UML | Krotność | Rola | Nawigacja |
+|---|---|---|---|---|
+| StateMachine ↔ State | Kompozycja ♦ | `1` — `0..*` | `states` | dwukierunkowa |
+| StateMachine ↔ Transition | Kompozycja ♦ | `1` — `0..*` | `transitions` | dwukierunkowa |
+| Transition → State | Asocjacja → | `0..*` — `1` | `source` | jednokierunkowa |
+| Transition → State | Asocjacja → | `0..*` — `1` | `target` | jednokierunkowa |
 
-### Ograniczenia poprawności (OCL)
+### Ograniczenia OCL
 
-Metamodel strukturalny nie wyraża wszystkich reguł poprawności. Dodatkowe ograniczenia w OCL:
+Ograniczenia OCL (Object Constraint Language) uzupełniają diagram klas UML o reguły, których nie da się wyrazić samą strukturą:
 
 ```
 context StateMachine
-  -- Automat musi mieć dokładnie jeden stan początkowy
+  -- Dokładnie jeden stan początkowy
   inv oneInitialState: 
     self.states->select(s | s.isInitial)->size() = 1
 
-  -- Automat musi mieć co najmniej jeden stan
+  -- Co najmniej jeden stan
   inv hasStates: 
     self.states->notEmpty()
 
 context Transition
-  -- Stan źródłowy i docelowy muszą należeć do tego samego automatu
+  -- Stany źródłowy i docelowy należą do tego samego automatu
   inv sameStateMachine: 
-    self.source.stateMachine = self.target.stateMachine
+    self.source.oclContainer() = self.oclContainer()
 
-  -- Stan końcowy nie może być stanem źródłowym przejścia
+  -- Stan końcowy nie może być źródłem przejścia
   inv noTransitionFromFinal: 
     not self.source.isFinal
 ```
 
-### Metamodel w składni Ecore (XMI)
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<ecore:EPackage xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI"
-    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    name="fsm" nsURI="http://example.org/fsm/1.0" nsPrefix="fsm">
-
-  <eClassifiers xsi:type="ecore:EClass" name="StateMachine">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name"
-        lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="states"
-        upperBound="-1" eType="#//State" containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="transitions"
-        upperBound="-1" eType="#//Transition" containment="true"/>
-  </eClassifiers>
-
-  <eClassifiers xsi:type="ecore:EClass" name="State">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name"
-        lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isInitial"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isFinal"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-  </eClassifiers>
-
-  <eClassifiers xsi:type="ecore:EClass" name="Transition">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="event"
-        lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="guard"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="action"
-        eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="source"
-        lowerBound="1" eType="#//State"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="target"
-        lowerBound="1" eType="#//State"/>
-  </eClassifiers>
-</ecore:EPackage>
-```
-
-### Metamodel w składni KM3
-
-```
-package fsm {
-    class StateMachine {
-        attribute name : String;
-        reference states ordered container : State oppositeOf machine;
-        reference transitions ordered container : Transition oppositeOf machine;
-    }
-
-    class State {
-        attribute name : String;
-        attribute isInitial : Boolean;
-        attribute isFinal : Boolean;
-        reference machine container : StateMachine oppositeOf states;
-        reference outgoing[*] : Transition oppositeOf source;
-        reference incoming[*] : Transition oppositeOf target;
-    }
-
-    class Transition {
-        attribute event : String;
-        attribute guard : String;
-        attribute action : String;
-        reference machine container : StateMachine oppositeOf transitions;
-        reference source : State oppositeOf outgoing;
-        reference target : State oppositeOf incoming;
-    }
-}
-```
-
 ## Przykłady
 
-### Przykładowa instancja modelu — automat bramki obrotowej (Turnstile)
+### Instancja modelu — automat bramki obrotowej (Turnstile)
 
-Na podstawie metamodelu FSM tworzymy **konkretny model** automatu sterującego bramką obrotową. Model ten jest instancją metamodelu — każdy element modelu jest instancją odpowiedniej metaklasy.
+Na podstawie metamodelu FSM tworzymy **konkretny model** (poziom M1). Każdy element modelu jest instancją odpowiedniej metaklasy z poziomu M2.
 
 #### Opis dziedzinowy
 
-Bramka obrotowa (turnstile) ma dwa stany:
-- **Locked** (zablokowana) — stan początkowy, bramka nie przepuszcza
-- **Unlocked** (odblokowana) — bramka przepuszcza po wrzuceniu monety
+Bramka obrotowa ma dwa stany:
+- **Locked** (zablokowana) — stan początkowy
+- **Unlocked** (odblokowana) — po wrzuceniu monety
 
-Zdarzenia:
-- **coin** — wrzucenie monety
-- **push** — pchnięcie bramki
+Zdarzenia: **coin** (moneta), **push** (pchnięcie)
 
-#### Diagram stanów (instancja modelu)
+#### Diagram stanów UML (instancja modelu)
 
 ```mermaid
 stateDiagram-v2
@@ -269,47 +210,51 @@ stateDiagram-v2
     Locked --> Locked : push / alarm
 ```
 
-#### Mapowanie instancji na metaklasy
+#### Diagram obiektów UML (mapowanie instancji)
 
-| Element modelu (M1) | Metaklasa (M2) | Wartości atrybutów |
+W UML instancje modelu przedstawiamy na **diagramie obiektów** — każdy obiekt jest podkreślony i ma format `nazwa : Klasa`:
+
+| Obiekt (M1) | Metaklasa (M2) | Wartości atrybutów |
 |---|---|---|
-| `turnstile` | `StateMachine` | `name = "Turnstile"` |
-| `Locked` | `State` | `name = "Locked"`, `isInitial = true`, `isFinal = false` |
-| `Unlocked` | `State` | `name = "Unlocked"`, `isInitial = false`, `isFinal = false` |
-| `t1` | `Transition` | `event = "coin"`, `source = Locked`, `target = Unlocked`, `action = "unlock"` |
-| `t2` | `Transition` | `event = "push"`, `source = Unlocked`, `target = Locked`, `action = "lock"` |
-| `t3` | `Transition` | `event = "coin"`, `source = Unlocked`, `target = Unlocked`, `action = "—"` |
-| `t4` | `Transition` | `event = "push"`, `source = Locked`, `target = Locked`, `action = "alarm"` |
+| `turnstile : StateMachine` | `StateMachine` | `name = "Turnstile"` |
+| `locked : State` | `State` | `name = "Locked"`, `isInitial = true`, `isFinal = false` |
+| `unlocked : State` | `State` | `name = "Unlocked"`, `isInitial = false`, `isFinal = false` |
+| `t1 : Transition` | `Transition` | `event = "coin"`, `source = locked`, `target = unlocked`, `action = "unlock"` |
+| `t2 : Transition` | `Transition` | `event = "push"`, `source = unlocked`, `target = locked`, `action = "lock"` |
+| `t3 : Transition` | `Transition` | `event = "coin"`, `source = unlocked`, `target = unlocked` |
+| `t4 : Transition` | `Transition` | `event = "push"`, `source = locked`, `target = locked`, `action = "alarm"` |
 
-#### Relacja instanceOf na trzech poziomach
+#### Hierarchia poziomów modelowania (M0–M3)
 
 ```mermaid
 graph TD
-    subgraph "M2 — Metamodel FSM"
+    subgraph "M3 — Meta-metamodel (MOF / UML Infrastructure)"
+        M3["Class, Property, Association, ..."]
+    end
+    subgraph "M2 — Metamodel FSM (diagram klas UML)"
         MC["StateMachine"]
         MS["State"]
         MT["Transition"]
     end
-    subgraph "M1 — Model (Turnstile)"
-        I1["turnstile: StateMachine"]
-        I2["Locked: State"]
-        I3["Unlocked: State"]
-        I4["t1: Transition (coin)"]
-        I5["t2: Transition (push)"]
+    subgraph "M1 — Model (diagram obiektów UML)"
+        I1["turnstile : StateMachine"]
+        I2["locked : State"]
+        I3["unlocked : State"]
+        I4["t1 : Transition"]
     end
     subgraph "M0 — Instancje runtime"
-        R1["bramka_hala_A: Turnstile"]
+        R1["bramka_hala_A"]
         R2["aktualny stan = Locked"]
     end
 
-    I1 -->|"instanceOf"| MC
-    I2 -->|"instanceOf"| MS
-    I3 -->|"instanceOf"| MS
-    I4 -->|"instanceOf"| MT
-    I5 -->|"instanceOf"| MT
-    R1 -->|"instanceOf"| I1
-    R2 -->|"instanceOf"| I2
+    MC -->|"«instanceOf»"| M3
+    I1 -->|"«instanceOf»"| MC
+    I2 -->|"«instanceOf»"| MS
+    I3 -->|"«instanceOf»"| MS
+    I4 -->|"«instanceOf»"| MT
+    R1 -->|"«instanceOf»"| I1
 
+    style M3 fill:#f0e0f9,stroke:#7b1fa2
     style MC fill:#e0f0f9,stroke:#1565c0
     style MS fill:#e0f0f9,stroke:#1565c0
     style MT fill:#e0f0f9,stroke:#1565c0
@@ -317,44 +262,46 @@ graph TD
     style I2 fill:#e0f9e0,stroke:#2e7d32
     style I3 fill:#e0f9e0,stroke:#2e7d32
     style I4 fill:#e0f9e0,stroke:#2e7d32
-    style I5 fill:#e0f9e0,stroke:#2e7d32
     style R1 fill:#f9f3e0,stroke:#f57f17
     style R2 fill:#f9f3e0,stroke:#f57f17
 ```
 
 ### Drugi przykład — metamodel prostego języka grafów
 
-Aby pokazać uniwersalność podejścia, zaprojektujemy drugi metamodel — dla **prostego języka grafów skierowanych**.
+Aby pokazać uniwersalność podejścia, projektujemy drugi metamodel w notacji UML — dla **prostego języka grafów skierowanych**.
 
-#### Metamodel (2 metaklasy + kontener)
+#### Diagram klas UML (metamodel)
 
 ```mermaid
 classDiagram
     class Graph {
-        +name: String [1..1]
+        «metaclass»
+        + name : String [1..1]
     }
     class Node {
-        +label: String [1..1]
-        +color: String [0..1]
+        «metaclass»
+        + label : String [1..1]
+        + color : String [0..1]
     }
     class Edge {
-        +weight: Double [0..1]
-        +label: String [0..1]
+        «metaclass»
+        + weight : Double [0..1]
+        + label : String [0..1]
     }
 
-    Graph "1" *-- "*" Node : nodes
-    Graph "1" *-- "*" Edge : edges
-    Edge --> "1" Node : from
-    Edge --> "1" Node : to
+    Graph "1" *-- "0..*" Node : nodes
+    Graph "1" *-- "0..*" Edge : edges
+    Edge "0..*" --> "1" Node : from
+    Edge "0..*" --> "1" Node : to
 ```
 
 #### Opis metaklas
 
-- **`Graph`** — kontener główny, posiada nazwę, zawiera węzły i krawędzie (kompozycja)
+- **`Graph`** — kontener główny (kompozycja z `Node` i `Edge`)
 - **`Node`** — węzeł grafu z etykietą i opcjonalnym kolorem
-- **`Edge`** — krawędź skierowana z opcjonalną wagą, wskazuje na węzeł źródłowy (`from`) i docelowy (`to`)
+- **`Edge`** — krawędź skierowana z opcjonalną wagą; asocjacje skierowane `from` i `to` wskazują na węzły
 
-#### Przykładowa instancja — graf sieci komputerowej
+#### Instancja — graf sieci komputerowej (diagram obiektów UML)
 
 ```mermaid
 graph LR
@@ -364,46 +311,38 @@ graph LR
     B -->|"10 Mbps"| D["Klient D"]
 ```
 
-| Element modelu | Metaklasa | Atrybuty |
+| Obiekt (M1) | Metaklasa (M2) | Atrybuty |
 |---|---|---|
-| `siec` | `Graph` | `name = "Sieć LAN"` |
-| `serwerA` | `Node` | `label = "Serwer A"`, `color = "blue"` |
-| `routerB` | `Node` | `label = "Router B"`, `color = "green"` |
-| `serwerC` | `Node` | `label = "Serwer C"`, `color = "blue"` |
-| `klientD` | `Node` | `label = "Klient D"`, `color = "gray"` |
-| `e1` | `Edge` | `from = serwerA`, `to = routerB`, `weight = 100.0`, `label = "100 Mbps"` |
-| `e2` | `Edge` | `from = routerB`, `to = serwerC`, `weight = 1000.0`, `label = "1 Gbps"` |
-| `e3` | `Edge` | `from = serwerA`, `to = serwerC`, `weight = 500.0`, `label = "500 Mbps"` |
-| `e4` | `Edge` | `from = routerB`, `to = klientD`, `weight = 10.0`, `label = "10 Mbps"` |
+| `siec : Graph` | `Graph` | `name = "Sieć LAN"` |
+| `serwerA : Node` | `Node` | `label = "Serwer A"`, `color = "blue"` |
+| `routerB : Node` | `Node` | `label = "Router B"`, `color = "green"` |
+| `e1 : Edge` | `Edge` | `from = serwerA`, `to = routerB`, `weight = 100.0` |
+| `e2 : Edge` | `Edge` | `from = routerB`, `to = serwerC`, `weight = 1000.0` |
 
 ### Porównanie obu metamodeli
 
 | Cecha | Metamodel FSM | Metamodel grafów |
 |---|---|---|
-| **Liczba metaklas** | 3 (StateMachine, State, Transition) | 3 (Graph, Node, Edge) |
-| **Kontener** | `StateMachine` | `Graph` |
+| **Liczba metaklas** | 3 | 3 |
+| **Kontener (kompozycja ♦)** | `StateMachine` | `Graph` |
 | **Elementy** | `State`, `Transition` | `Node`, `Edge` |
-| **Relacja kluczowa** | Transition → State (source/target) | Edge → Node (from/to) |
+| **Asocjacje skierowane →** | `source`, `target` | `from`, `to` |
 | **Atrybuty flagowe** | `isInitial`, `isFinal` | — |
-| **Atrybuty opcjonalne** | `guard`, `action` | `color`, `weight`, `label` |
-| **Dziedzina** | Zachowanie systemu | Struktura sieci/grafu |
-| **Podobieństwo strukturalne** | Wysoka analogia — oba mają wzorzec „kontener + węzły + krawędzie" |
+| **Wzorzec strukturalny** | kontener + węzły + krawędzie | kontener + węzły + krawędzie |
 
 ## Podsumowanie
 
-1. **Metamodel** definiuje strukturę języka modelowania poprzez metaklasy, atrybuty i relacje. Projektowanie metamodelu to systematyczny proces: wybór dziedziny → identyfikacja metaklas → definiowanie atrybutów → definiowanie relacji → dodanie ograniczeń.
+1. **Metamodel** definiuje strukturę języka modelowania. W UML metamodel przedstawiamy jako **diagram klas** z metaklasami oznaczonymi stereotypem `«metaclass»`, atrybutami w notacji UML i relacjami (kompozycja ♦, asocjacja →, generalizacja △).
 
-2. **Metaklasa** to centralny element metamodelu — definiuje typ elementu w języku modelowania. Każda metaklasa posiada atrybuty (cechy o typie prostym) i uczestniczy w relacjach z innymi metaklasami.
+2. **Kompozycja UML** (♦) wyraża relację część-całość z semantyką posiadania — usunięcie kontenera kaskadowo usuwa elementy. **Asocjacja skierowana** (→) wyraża referencję bez posiadania.
 
-3. **Relacje między metaklasami** dzielą się na: kompozycję (część-całość, z semantyką posiadania), referencję (luźne powiązanie) i dziedziczenie (hierarchia typów). Krotności na końcach relacji określają ograniczenia strukturalne.
+3. **Krotności** na końcach asocjacji (`1`, `0..1`, `0..*`, `1..*`) definiują ograniczenia strukturalne metamodelu.
 
-4. **Metamodel FSM** (3 metaklasy: `StateMachine`, `State`, `Transition`) ilustruje typowy wzorzec „kontener + elementy + powiązania" — automat zawiera stany i przejścia, przejścia wskazują na stany źródłowe i docelowe.
+4. **Ograniczenia OCL** uzupełniają diagram klas o reguły poprawności niemożliwe do wyrażenia samą strukturą (np. „dokładnie jeden stan początkowy").
 
-5. **Instancja modelu** to konkretny model zgodny z metamodelem — każdy element modelu jest instancją odpowiedniej metaklasy (relacja `instanceOf`). Np. stan `Locked` jest instancją metaklasy `State`.
+5. **Hierarchia M0–M3** w UML: M3 (meta-metamodel MOF), M2 (metamodel — diagram klas), M1 (model — diagram obiektów), M0 (instancje runtime). Relacja między poziomami to `«instanceOf»`.
 
-6. **Ograniczenia OCL** uzupełniają metamodel o reguły poprawności, których nie da się wyrazić samą strukturą (np. „dokładnie jeden stan początkowy", „stan końcowy nie może być źródłem przejścia").
-
-7. Metamodel można zapisać w różnych notacjach: **diagram klas UML/Mermaid** (wizualnie), **Ecore XMI** (format wymiany), **KM3** (składnia tekstowa). Wszystkie notacje wyrażają tę samą strukturę.
+6. Wzorzec **kontener + węzły + krawędzie** jest uniwersalny — zarówno metamodel FSM jak i grafów mają identyczną strukturę asocjacji w UML.
 
 ## Powiązane pytania
 
