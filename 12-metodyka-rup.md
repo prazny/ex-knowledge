@@ -2,404 +2,244 @@
 
 ## Kluczowe pojęcia
 
-- **RUP (Rational Unified Process)** — formalna, iteracyjno-przyrostowa metodyka wytwarzania oprogramowania opracowana przez firmę Rational Software (obecnie IBM) w latach 90. XX wieku. RUP definiuje kompletny framework procesu, obejmujący fazy, dyscypliny, role, artefakty i najlepsze praktyki. Metodyka jest oparta na UML i ściśle zintegrowana z narzędziami Rational (Rational Rose, ClearCase, RequisitePro). RUP jest konfigurowalny — organizacja może dostosować proces do swoich potrzeb, wybierając odpowiednie elementy.
-- **Faza (Phase)** — główny etap cyklu życia projektu w RUP. Każda faza kończy się kamieniem milowym (milestone), w którym podejmowana jest decyzja go/no-go. RUP definiuje cztery fazy: Inception (rozpoczęcie), Elaboration (opracowanie), Construction (budowa) i Transition (przekazanie). Fazy są realizowane sekwencyjnie, ale wewnątrz każdej fazy praca odbywa się iteracyjnie.
-- **Iteracja** — krótki cykl rozwojowy (typowo 2-6 tygodni) w ramach fazy, kończący się działającym przyrostem systemu. Każda iteracja obejmuje aktywności ze wszystkich dyscyplin (analiza, projektowanie, implementacja, testowanie), choć ich proporcje zmieniają się w zależności od fazy. Iteracyjność pozwala na wczesne wykrywanie ryzyk i ciągłą walidację z interesariuszami.
-- **Dyscyplina (Discipline)** — logiczna grupa powiązanych aktywności w procesie RUP. RUP definiuje 9 dyscyplin: 6 inżynieryjnych (modelowanie biznesowe, wymagania, analiza i projektowanie, implementacja, testowanie, wdrożenie) oraz 3 wspierające (zarządzanie konfiguracją, zarządzanie projektem, środowisko). Dyscypliny przebiegają przez wszystkie fazy, ale z różną intensywnością.
-- **Artefakt** — formalny produkt pracy w procesie RUP, tworzony lub modyfikowany w ramach aktywności. Przykłady artefaktów: dokument wizji, model przypadków użycia, model projektowy (UML), kod źródłowy, plan testów, plan iteracji. Artefakty są wersjonowane i podlegają zarządzaniu konfiguracją.
-- **Rola (Role)** — zbiór powiązanych odpowiedzialności i umiejętności przypisanych osobie lub zespołowi w procesie RUP. Przykłady ról: analityk systemowy, architekt oprogramowania, programista, tester, kierownik projektu. Jedna osoba może pełnić wiele ról, a jedna rola może być realizowana przez wiele osób.
-- **Kamień milowy (Milestone)** — punkt decyzyjny na końcu każdej fazy, w którym oceniany jest postęp projektu i podejmowana decyzja o kontynuacji. Kamienie milowe RUP: Lifecycle Objectives (LO), Lifecycle Architecture (LA), Initial Operational Capability (IOC), Product Release (PR).
-- **Najlepsze praktyki RUP** — sześć fundamentalnych zasad leżących u podstaw metodyki: (1) iteracyjne wytwarzanie, (2) zarządzanie wymaganiami, (3) architektura komponentowa, (4) wizualne modelowanie (UML), (5) ciągła weryfikacja jakości, (6) zarządzanie zmianami.
+- **Scrum** — lekka, iteracyjno-przyrostowa metodyka (framework) wytwarzania oprogramowania, należąca do rodziny metodyk Agile. Scrum został sformalizowany przez Kena Schwabera i Jeffa Sutherlanda w latach 90. XX wieku. Opiera się na empiryzmie — decyzje podejmowane są na podstawie obserwacji i doświadczenia, a nie szczegółowych planów z góry. Scrum definiuje trzy role, pięć zdarzeń i trzy artefakty.
+- **Sprint** — podstawowa jednostka pracy w Scrum — iteracja o stałej długości (typowo 1-4 tygodnie), w której zespół tworzy potencjalnie wdrażalny przyrost produktu. Sprint ma stały czas trwania (timebox), nie może być skrócony ani wydłużony. Każdy Sprint zawiera planowanie, codzienne spotkania, przegląd i retrospektywę.
+- **Product Backlog** — uporządkowana lista wszystkich wymagań, funkcjonalności, poprawek i usprawnień, które mogą być potrzebne w produkcie. Jest jedynym źródłem pracy dla zespołu Scrum. Product Backlog jest dynamiczny — ciągle ewoluuje w miarę poznawania produktu i rynku. Za jego zawartość i priorytetyzację odpowiada Product Owner.
+- **Sprint Backlog** — zbiór elementów Product Backlog wybranych do realizacji w bieżącym Sprincie, wraz z planem ich dostarczenia. Sprint Backlog jest własnością zespołu deweloperskiego — tylko zespół może go modyfikować w trakcie Sprintu.
+- **Przyrost (Increment)** — suma wszystkich elementów Product Backlog ukończonych w bieżącym Sprincie oraz wartość przyrostów ze wszystkich poprzednich Sprintów. Przyrost musi spełniać Definition of Done i być w stanie potencjalnie wdrażalnym — niezależnie od tego, czy Product Owner zdecyduje się go wydać.
+- **Definition of Done (DoD)** — formalna definicja jakości, którą musi spełnić każdy element Product Backlog, aby mógł zostać uznany za ukończony. DoD jest wspólna dla całego zespołu i zapewnia przejrzystość. Przykład: kod napisany, testy jednostkowe przechodzą, code review wykonane, dokumentacja zaktualizowana.
+- **Trzy filary empiryzmu** — fundamenty Scrum: **przejrzystość** (transparency — wszyscy rozumieją proces i artefakty), **inspekcja** (inspection — regularne sprawdzanie postępu i artefaktów), **adaptacja** (adaptation — dostosowywanie procesu na podstawie wyników inspekcji).
 
-## Struktura RUP — fazy i dyscypliny
+## Struktura Scrum — role, zdarzenia, artefakty
 
-### Dwuwymiarowa organizacja procesu
+### Trzy role Scrum
 
-RUP organizuje proces wytwarzania w dwóch wymiarach:
-- **Wymiar poziomy (czas)** — cztery fazy sekwencyjne, każda składająca się z jednej lub wielu iteracji
-- **Wymiar pionowy (treść)** — dziewięć dyscyplin, realizowanych z różną intensywnością w każdej fazie
-
-Ta dwuwymiarowa struktura jest kluczową cechą RUP — w każdej iteracji wykonywane są aktywności ze wszystkich dyscyplin, ale ich proporcje zmieniają się w miarę postępu projektu.
-
-### Cztery fazy RUP
-
-#### 1. Inception (Rozpoczęcie)
+#### 1. Product Owner (Właściciel Produktu)
 
 | Aspekt | Opis |
 |---|---|
-| **Cel** | Określenie zakresu projektu, wizji produktu i uzasadnienia biznesowego |
-| **Kluczowe aktywności** | Analiza wykonalności, identyfikacja kluczowych przypadków użycia (10-20%), wstępna ocena ryzyk, oszacowanie kosztów |
-| **Artefakty** | Dokument wizji, model przypadków użycia (wstępny), lista ryzyk, plan projektu (wstępny), studium wykonalności |
-| **Kamień milowy** | **Lifecycle Objectives (LO)** — czy projekt ma sens biznesowy? Czy zakres jest zrozumiały? |
-| **Typowy czas** | 1 iteracja (ok. 10% czasu projektu) |
+| **Odpowiedzialność** | Maksymalizacja wartości produktu i pracy zespołu deweloperskiego |
+| **Kluczowe zadania** | Zarządzanie Product Backlog (tworzenie, priorytetyzacja, wyjaśnianie elementów), komunikacja wizji produktu, podejmowanie decyzji o wydaniu |
+| **Uprawnienia** | Jedyna osoba decydująca o zawartości i kolejności Product Backlog |
+| **Cechy** | Jedna osoba (nie komitet), dostępna dla zespołu, decyzyjna |
 
-#### 2. Elaboration (Opracowanie)
-
-| Aspekt | Opis |
-|---|---|
-| **Cel** | Ustabilizowanie architektury systemu, eliminacja głównych ryzyk technicznych, doprecyzowanie wymagań |
-| **Kluczowe aktywności** | Projektowanie architektury bazowej, prototypowanie architektoniczne, szczegółowa analiza wymagań (80%), implementacja szkieletu architektury |
-| **Artefakty** | Model architektury (UML), prototyp architektoniczny, model przypadków użycia (szczegółowy), model projektowy, plan iteracji |
-| **Kamień milowy** | **Lifecycle Architecture (LA)** — czy architektura jest stabilna? Czy główne ryzyka zostały wyeliminowane? |
-| **Typowy czas** | 2-3 iteracje (ok. 30% czasu projektu) |
-
-#### 3. Construction (Budowa)
+#### 2. Scrum Master
 
 | Aspekt | Opis |
 |---|---|
-| **Cel** | Implementacja pełnej funkcjonalności systemu na bazie ustalonej architektury |
-| **Kluczowe aktywności** | Kodowanie, testowanie jednostkowe i integracyjne, integracja komponentów, dokumentacja użytkownika |
-| **Artefakty** | Kod źródłowy, wersje beta systemu, dokumentacja użytkownika, raporty z testów |
-| **Kamień milowy** | **Initial Operational Capability (IOC)** — czy system jest gotowy do wdrożenia pilotażowego? |
-| **Typowy czas** | 3-5 iteracji (ok. 50% czasu projektu) |
+| **Odpowiedzialność** | Zapewnienie, że Scrum jest rozumiany i stosowany; usuwanie przeszkód (impediments) |
+| **Kluczowe zadania** | Coaching zespołu i organizacji, facylitacja zdarzeń Scrum, ochrona zespołu przed zakłóceniami, promowanie samoorganizacji |
+| **Uprawnienia** | Servant-leader — służy zespołowi, nie zarządza nim |
+| **Cechy** | Nie jest kierownikiem projektu, nie przydziela zadań |
 
-#### 4. Transition (Przekazanie)
+#### 3. Zespół deweloperski (Development Team)
 
 | Aspekt | Opis |
 |---|---|
-| **Cel** | Przekazanie systemu użytkownikom końcowym, wdrożenie produkcyjne |
-| **Kluczowe aktywności** | Testy akceptacyjne, szkolenia użytkowników, wdrożenie, poprawki błędów, tuning wydajności |
-| **Artefakty** | Wersja produkcyjna, materiały szkoleniowe, notatki wydania (release notes), raport końcowy |
-| **Kamień milowy** | **Product Release (PR)** — czy system spełnia wymagania? Czy użytkownicy są zadowoleni? |
-| **Typowy czas** | 1-2 iteracje (ok. 10% czasu projektu) |
+| **Odpowiedzialność** | Dostarczanie potencjalnie wdrażalnego przyrostu na koniec każdego Sprintu |
+| **Kluczowe cechy** | Samoorganizujący się, wielofunkcyjny (cross-functional), brak podról (wszyscy są „deweloperami") |
+| **Rozmiar** | 3-9 osób (optymalnie 5-7) |
+| **Uprawnienia** | Decyduje JAK wykonać pracę (Product Owner decyduje CO) |
 
-### Dziewięć dyscyplin RUP
+### Pięć zdarzeń Scrum
 
-RUP definiuje 9 dyscyplin — 6 inżynieryjnych i 3 wspierające:
+Wszystkie zdarzenia Scrum są timeboxowane — mają maksymalny czas trwania, którego nie można przekroczyć.
 
-#### Dyscypliny inżynieryjne
+#### 1. Sprint
 
-1. **Modelowanie biznesowe (Business Modeling)** — zrozumienie procesów biznesowych organizacji, identyfikacja problemów i możliwości usprawnienia. Artefakty: model procesów biznesowych, słownik biznesowy.
+- **Timebox:** 1-4 tygodnie (stała długość przez cały projekt)
+- **Cel:** Dostarczenie potencjalnie wdrażalnego przyrostu
+- **Reguły:** Nie zmienia się celu Sprintu, nie obniża się jakości (DoD), zakres może być renegocjowany z Product Ownerem
+- **Zawiera:** Wszystkie pozostałe zdarzenia Scrum
 
-2. **Wymagania (Requirements)** — pozyskiwanie, dokumentowanie i zarządzanie wymaganiami. Artefakty: dokument wizji, model przypadków użycia, specyfikacja wymagań dodatkowych.
+#### 2. Sprint Planning (Planowanie Sprintu)
 
-3. **Analiza i projektowanie (Analysis & Design)** — transformacja wymagań w architekturę i projekt systemu. Artefakty: model projektowy (diagramy klas, sekwencji, stanów UML), dokument architektury oprogramowania (SAD).
+- **Timebox:** max 8h dla Sprintu 4-tygodniowego (proporcjonalnie mniej dla krótszych)
+- **Uczestnicy:** Cały Scrum Team
+- **Wynik:** Sprint Goal (cel Sprintu) + Sprint Backlog
+- **Dwa pytania:**
+  1. **CO** można dostarczyć w tym Sprincie? (wybór elementów z Product Backlog)
+  2. **JAK** to dostarczymy? (plan pracy, dekompozycja na zadania)
 
-4. **Implementacja (Implementation)** — kodowanie, testowanie jednostkowe, integracja komponentów. Artefakty: kod źródłowy, komponenty, podsystemy.
+#### 3. Daily Scrum (Codzienny Scrum)
 
-5. **Testowanie (Test)** — weryfikacja i walidacja systemu na różnych poziomach. Artefakty: plan testów, przypadki testowe, raporty z testów, defekty.
+- **Timebox:** max 15 minut
+- **Uczestnicy:** Zespół deweloperski (Scrum Master facylituje w razie potrzeby)
+- **Cel:** Synchronizacja, identyfikacja przeszkód, planowanie najbliższych 24h
+- **Format (opcjonalny):** Co zrobiłem wczoraj? Co zrobię dziś? Jakie mam przeszkody?
 
-6. **Wdrożenie (Deployment)** — dostarczenie systemu użytkownikom końcowym. Artefakty: plan wdrożenia, materiały szkoleniowe, notatki wydania.
+#### 4. Sprint Review (Przegląd Sprintu)
 
-#### Dyscypliny wspierające
+- **Timebox:** max 4h dla Sprintu 4-tygodniowego
+- **Uczestnicy:** Scrum Team + interesariusze
+- **Cel:** Inspekcja przyrostu, zebranie feedbacku, adaptacja Product Backlog
+- **Format:** Demo działającego oprogramowania (nie prezentacja slajdów)
 
-7. **Zarządzanie konfiguracją i zmianami (Configuration & Change Management)** — kontrola wersji artefaktów, zarządzanie zmianami i zgłoszeniami. Narzędzia: Rational ClearCase, ClearQuest.
+#### 5. Sprint Retrospective (Retrospektywa Sprintu)
 
-8. **Zarządzanie projektem (Project Management)** — planowanie iteracji, monitorowanie postępu, zarządzanie ryzykami. Artefakty: plan projektu, plan iteracji, lista ryzyk, raport statusu.
+- **Timebox:** max 3h dla Sprintu 4-tygodniowego
+- **Uczestnicy:** Scrum Team
+- **Cel:** Inspekcja procesu, identyfikacja usprawnień
+- **Wynik:** Konkretne akcje usprawniające do wdrożenia w następnym Sprincie
+- **Trzy pytania:** Co poszło dobrze? Co można poprawić? Co zrobimy inaczej?
 
-9. **Środowisko (Environment)** — konfiguracja narzędzi, procesów i infrastruktury dla zespołu. Artefakty: wytyczne projektowe, szablony artefaktów, konfiguracja narzędzi.
+### Trzy artefakty Scrum
 
-## Role w RUP
+| Artefakt | Właściciel | Cel | Przejrzystość zapewniona przez |
+|---|---|---|---|
+| **Product Backlog** | Product Owner | Lista wszystkich wymagań produktu | Product Goal (cel produktu) |
+| **Sprint Backlog** | Zespół deweloperski | Plan pracy na bieżący Sprint | Sprint Goal (cel Sprintu) |
+| **Przyrost (Increment)** | Scrum Team | Działające oprogramowanie | Definition of Done |
 
-RUP definiuje ponad 30 ról pogrupowanych według dyscyplin. Najważniejsze role:
-
-| Rola | Odpowiedzialność | Dyscyplina |
-|---|---|---|
-| **Analityk systemowy** | Identyfikacja i dokumentowanie wymagań, modelowanie przypadków użycia | Wymagania |
-| **Architekt oprogramowania** | Projektowanie architektury, podejmowanie kluczowych decyzji technicznych | Analiza i projektowanie |
-| **Projektant** | Szczegółowy projekt klas, interfejsów i komponentów | Analiza i projektowanie |
-| **Programista** | Implementacja kodu, testy jednostkowe | Implementacja |
-| **Tester** | Planowanie i wykonywanie testów, raportowanie defektów | Testowanie |
-| **Kierownik projektu** | Planowanie, monitorowanie, zarządzanie ryzykami i zasobami | Zarządzanie projektem |
-| **Kierownik konfiguracji** | Zarządzanie wersjami, bazami kodu, procesem zmian | Zarządzanie konfiguracją |
-| **Analityk biznesowy** | Modelowanie procesów biznesowych, identyfikacja potrzeb | Modelowanie biznesowe |
-
-## Artefakty RUP
-
-### Kluczowe artefakty według faz
+## Przepływ procesu Scrum
 
 ```mermaid
 flowchart LR
-    subgraph "Inception"
-        A1["Dokument wizji"]
-        A2["Lista ryzyk"]
-        A3["Model przypadków<br/>użycia (wstępny)"]
-        A4["Studium<br/>wykonalności"]
-    end
-    subgraph "Elaboration"
-        B1["Dokument architektury<br/>oprogramowania (SAD)"]
-        B2["Model projektowy<br/>(UML)"]
-        B3["Prototyp<br/>architektoniczny"]
-        B4["Plan iteracji"]
-    end
-    subgraph "Construction"
-        C1["Kod źródłowy"]
-        C2["Wersje beta"]
-        C3["Raporty z testów"]
-        C4["Dokumentacja<br/>użytkownika"]
-    end
-    subgraph "Transition"
-        D1["Wersja<br/>produkcyjna"]
-        D2["Materiały<br/>szkoleniowe"]
-        D3["Release notes"]
-    end
+    PB["Product<br/>Backlog"] --> SP["Sprint<br/>Planning"]
+    SP --> SB["Sprint<br/>Backlog"]
+    SB --> DEV["Sprint<br/>(1-4 tyg.)"]
+    DEV --> DS["Daily<br/>Scrum"]
+    DS --> DEV
+    DEV --> INC["Przyrost<br/>(Increment)"]
+    INC --> SR["Sprint<br/>Review"]
+    SR --> RET["Sprint<br/>Retrospective"]
+    RET --> SP
+    SR -->|"feedback"| PB
+
+    style PB fill:#e3f2fd,stroke:#1565c0
+    style SB fill:#e8f5e9,stroke:#2e7d32
+    style INC fill:#fff3e0,stroke:#e65100
+    style DEV fill:#f3e5f5,stroke:#7b1fa2
 ```
 
-### Hierarchia artefaktów
+## Wartości Scrum
 
-| Kategoria | Artefakty | Format |
-|---|---|---|
-| **Zarządcze** | Plan projektu, plan iteracji, lista ryzyk, raport statusu | Dokumenty tekstowe |
-| **Wymaganiowe** | Dokument wizji, model przypadków użycia, specyfikacja wymagań dodatkowych, słownik | UML + tekst |
-| **Projektowe** | Model projektowy, dokument architektury (SAD), model danych | Diagramy UML |
-| **Implementacyjne** | Kod źródłowy, komponenty, skrypty budowania | Pliki kodu |
-| **Testowe** | Plan testów, przypadki testowe, raporty z testów, defekty | Dokumenty + narzędzia |
-| **Wdrożeniowe** | Plan wdrożenia, materiały szkoleniowe, notatki wydania | Dokumenty + pakiety |
+Scrum definiuje pięć wartości, które zespół powinien wyznawać:
 
-## Sześć najlepszych praktyk RUP
-
-RUP opiera się na sześciu fundamentalnych najlepszych praktykach, które stanowią filozofię metodyki:
-
-### 1. Iteracyjne wytwarzanie oprogramowania (Develop Iteratively)
-
-Zamiast jednorazowego przejścia przez fazy (jak w modelu kaskadowym), RUP dzieli projekt na krótkie iteracje. Każda iteracja produkuje działający przyrost systemu, co pozwala na:
-- Wczesne wykrywanie i eliminację ryzyk
-- Ciągłą walidację z interesariuszami
-- Adaptację do zmieniających się wymagań
-
-### 2. Zarządzanie wymaganiami (Manage Requirements)
-
-Wymagania są aktywnie zarządzane przez cały cykl życia projektu:
-- Systematyczne pozyskiwanie i dokumentowanie wymagań
-- Śledzenie powiązań (traceability) między wymaganiami a artefaktami
-- Zarządzanie zmianami wymagań z oceną wpływu
-
-### 3. Architektura komponentowa (Use Component-Based Architectures)
-
-System jest projektowany jako zbiór luźno powiązanych komponentów:
-- Ponowne użycie istniejących komponentów
-- Modularność ułatwiająca równoległą pracę zespołów
-- Łatwiejsze testowanie i utrzymanie
-
-### 4. Wizualne modelowanie (Model Visually)
-
-UML jest podstawowym narzędziem komunikacji i dokumentacji:
-- Diagramy klas, sekwencji, stanów, aktywności
-- Modele jako formalne specyfikacje (nie tylko szkice)
-- Automatyczna generacja kodu z modeli (MDA)
-
-### 5. Ciągła weryfikacja jakości (Verify Quality Continuously)
-
-Jakość jest weryfikowana w każdej iteracji, nie tylko na końcu projektu:
-- Testy jednostkowe, integracyjne, systemowe, akceptacyjne
-- Przeglądy kodu i inspekcje
-- Metryki jakości (pokrycie testami, gęstość defektów)
-
-### 6. Zarządzanie zmianami (Manage Change)
-
-Zmiany w artefaktach są kontrolowane i śledzone:
-- System kontroli wersji (Rational ClearCase)
-- Proces zarządzania zmianami (Change Request)
-- Śledzenie wpływu zmian na inne artefakty
-
-## Porównanie RUP z metodykami Agile
-
-### Podobieństwa
-
-RUP i metodyki Agile (np. Scrum, XP) mają wspólne korzenie w podejściu iteracyjnym:
-
-| Cecha wspólna | RUP | Agile (Scrum) |
-|---|---|---|
-| Iteracyjność | ✅ Iteracje 2-6 tygodni | ✅ Sprinty 1-4 tygodnie |
-| Przyrostowość | ✅ Działający przyrost po iteracji | ✅ Potencjalnie wdrażalny przyrost |
-| Adaptacja do zmian | ✅ Zarządzanie zmianami | ✅ Reagowanie na zmiany |
-| Współpraca z klientem | ✅ Walidacja na kamieniach milowych | ✅ Ciągła współpraca |
-
-### Różnice
-
-| Aspekt | RUP | Agile (Scrum) |
-|---|---|---|
-| **Formalność** | Wysoka — rozbudowana dokumentacja, formalne role i artefakty | Niska — minimalna dokumentacja, elastyczne role |
-| **Dokumentacja** | Obszerny zestaw artefaktów (>100 typów) | Minimalna — „działający software ponad dokumentację" |
-| **Planowanie** | Szczegółowe planowanie z góry (plan projektu, plan iteracji) | Planowanie adaptacyjne (sprint planning, backlog) |
-| **Architektura** | Architektura ustalana w fazie Elaboration | Architektura emergentna, ewoluująca |
-| **Rozmiar zespołu** | Duże zespoły (10-100+ osób) | Małe zespoły (5-9 osób) |
-| **Skalowalność** | Zaprojektowany dla dużych projektów enterprise | Wymaga frameworków skalowania (SAFe, LeSS) |
-| **Narzędzia** | Ścisła integracja z narzędziami Rational/IBM | Narzędzia lekkie (Jira, Trello) |
-| **Konfigurowalność** | Proces konfigurowalny — można wybrać podzbiór elementów | Proces lekki — mniej do konfiguracji |
-| **Certyfikacja** | Formalne kamienie milowe z decyzją go/no-go | Przegląd sprintu (Sprint Review) |
-| **Ryzyka** | Formalna lista ryzyk, eliminacja w Elaboration | Ryzyka zarządzane przez Product Ownera i zespół |
-
-### Kiedy wybrać RUP, a kiedy Agile?
-
-| Scenariusz | Rekomendacja |
+| Wartość | Znaczenie w praktyce |
 |---|---|
-| Duży projekt enterprise (>20 osób) | ✅ RUP |
-| Projekt z rygorystycznymi wymaganiami regulacyjnymi | ✅ RUP |
-| Mały zespół, szybko zmieniające się wymagania | ✅ Agile |
-| Startup, MVP, prototyp | ✅ Agile |
-| Projekt wymagający obszernej dokumentacji (np. obronność, medycyna) | ✅ RUP |
-| Projekt z dobrze zdefiniowaną architekturą | ⚠️ Oba podejścia |
-| Organizacja z dojrzałymi procesami | ✅ RUP |
-| Organizacja rozpoczynająca transformację procesową | ✅ Agile (prostszy start) |
+| **Zaangażowanie (Commitment)** | Zespół zobowiązuje się do osiągnięcia celu Sprintu |
+| **Odwaga (Courage)** | Członkowie zespołu mają odwagę podejmować trudne decyzje i mówić o problemach |
+| **Skupienie (Focus)** | Zespół skupia się na pracy w Sprincie i celu Sprintu |
+| **Otwartość (Openness)** | Scrum Team i interesariusze są otwarci na pracę i wyzwania |
+| **Szacunek (Respect)** | Członkowie zespołu szanują się nawzajem jako kompetentne, niezależne osoby |
 
 ## Przykłady
 
-### Diagram faz RUP z intensywnością dyscyplin
+### Przykładowy Sprint — system e-commerce
 
-Poniższy diagram ilustruje dwuwymiarową strukturę RUP — fazy (oś pozioma) i dyscypliny (oś pionowa) z zaznaczeniem intensywności prac:
-
-```mermaid
-gantt
-    title Intensywność dyscyplin w fazach RUP
-    dateFormat  X
-    axisFormat %s
-
-    section Modelowanie biznesowe
-    Inception           :active, mb1, 0, 3
-    Elaboration         :mb2, 3, 5
-    Construction        :mb3, 5, 6
-    Transition          :mb4, 6, 7
-
-    section Wymagania
-    Inception           :active, req1, 0, 4
-    Elaboration         :active, req2, 4, 8
-    Construction        :req3, 8, 10
-    Transition          :req4, 10, 11
-
-    section Analiza i projektowanie
-    Inception           :ad1, 0, 2
-    Elaboration         :active, ad2, 2, 8
-    Construction        :ad3, 8, 11
-    Transition          :ad4, 11, 12
-
-    section Implementacja
-    Inception           :imp1, 0, 1
-    Elaboration         :imp2, 1, 4
-    Construction        :active, imp3, 4, 11
-    Transition          :imp4, 11, 12
-
-    section Testowanie
-    Inception           :t1, 0, 1
-    Elaboration         :t2, 1, 4
-    Construction        :active, t3, 4, 11
-    Transition          :active, t4, 11, 13
-
-    section Wdrożenie
-    Inception           :d1, 0, 0
-    Elaboration         :d2, 0, 1
-    Construction        :d3, 1, 3
-    Transition          :active, d4, 3, 7
-```
-
-### Przykładowy plan iteracji (faza Construction, iteracja C2)
-
-Poniżej przedstawiono przykładowy plan jednej iteracji w fazie Construction dla systemu e-commerce:
-
-**Iteracja C2 — System zarządzania zamówieniami**
+**Sprint 5 — Moduł koszyka zakupowego**
 
 | Element | Szczegóły |
 |---|---|
-| **Faza** | Construction |
-| **Numer iteracji** | C2 (5. iteracja projektu) |
-| **Czas trwania** | 3 tygodnie |
-| **Cel iteracji** | Implementacja modułu składania i przetwarzania zamówień |
+| **Długość Sprintu** | 2 tygodnie |
+| **Sprint Goal** | Użytkownik może dodawać produkty do koszyka, modyfikować ilości i przejść do realizacji zamówienia |
+| **Velocity zespołu** | ~30 story points / Sprint |
 
-**Przypadki użycia realizowane w iteracji:**
+**Sprint Backlog (wybrane elementy z Product Backlog):**
 
-| Przypadek użycia | Priorytet | Status |
-|---|---|---|
-| UC-07: Złóż zamówienie | Wysoki | Do implementacji |
-| UC-08: Anuluj zamówienie | Wysoki | Do implementacji |
-| UC-09: Śledź status zamówienia | Średni | Do implementacji |
-| UC-12: Generuj raport zamówień | Niski | Częściowa implementacja |
+| ID | User Story | Story Points | Priorytet |
+|---|---|---|---|
+| US-21 | Jako użytkownik chcę dodać produkt do koszyka | 5 | Wysoki |
+| US-22 | Jako użytkownik chcę zmienić ilość produktu w koszyku | 3 | Wysoki |
+| US-23 | Jako użytkownik chcę usunąć produkt z koszyka | 2 | Wysoki |
+| US-24 | Jako użytkownik chcę widzieć podsumowanie koszyka z ceną | 5 | Wysoki |
+| US-25 | Jako użytkownik chcę przejść do realizacji zamówienia | 8 | Wysoki |
+| US-26 | Jako użytkownik chcę zapisać koszyk na później | 5 | Średni |
+| BUG-12 | Poprawka wyświetlania cen z VAT | 2 | Wysoki |
 
-**Harmonogram iteracji:**
+**Harmonogram Sprintu:**
 
 ```mermaid
 gantt
-    title Plan iteracji C2 (3 tygodnie)
+    title Sprint 5 — Koszyk zakupowy (2 tygodnie)
     dateFormat  YYYY-MM-DD
     axisFormat  %d.%m
 
-    section Analiza
-    Doprecyzowanie UC-07, UC-08    :a1, 2024-01-08, 2d
-    Przegląd wymagań UC-09         :a2, 2024-01-08, 1d
-
-    section Projektowanie
-    Projekt klas zamówień          :d1, 2024-01-10, 2d
-    Projekt interfejsów API        :d2, 2024-01-10, 2d
-    Przegląd projektu              :milestone, d3, 2024-01-12, 0d
+    section Zdarzenia Scrum
+    Sprint Planning          :milestone, sp, 2024-01-08, 0d
+    Daily Scrum (codziennie) :ds, 2024-01-08, 12d
+    Sprint Review            :milestone, sr, 2024-01-19, 0d
+    Sprint Retrospective     :milestone, ret, 2024-01-19, 0d
 
     section Implementacja
-    Implementacja UC-07            :i1, 2024-01-13, 4d
-    Implementacja UC-08            :i2, 2024-01-15, 3d
-    Implementacja UC-09            :i3, 2024-01-17, 3d
-    Implementacja UC-12 (częściowa):i4, 2024-01-20, 2d
+    US-21 Dodaj do koszyka     :us21, 2024-01-08, 2d
+    US-22 Zmień ilość          :us22, 2024-01-10, 1d
+    US-23 Usuń z koszyka       :us23, 2024-01-10, 1d
+    BUG-12 Poprawka cen        :bug12, 2024-01-11, 1d
+    US-24 Podsumowanie koszyka :us24, 2024-01-11, 2d
+    US-25 Realizacja zamówienia:us25, 2024-01-14, 3d
+    US-26 Zapisz koszyk        :us26, 2024-01-17, 2d
 
     section Testowanie
-    Testy jednostkowe              :t1, 2024-01-15, 5d
-    Testy integracyjne             :t2, 2024-01-22, 3d
-    Naprawa defektów               :t3, 2024-01-24, 2d
-
-    section Ocena
-    Demo iteracji                  :milestone, e1, 2024-01-26, 0d
-    Retrospektywa                  :e2, 2024-01-26, 1d
+    Testy US-21, US-22, US-23  :t1, 2024-01-11, 2d
+    Testy US-24, US-25         :t2, 2024-01-16, 2d
+    Testy integracyjne         :t3, 2024-01-18, 1d
 ```
 
-**Kryteria zakończenia iteracji:**
-- Wszystkie przypadki użycia o wysokim priorytecie zaimplementowane i przetestowane
-- Pokrycie testami jednostkowymi ≥ 80%
-- Brak defektów krytycznych (severity 1-2)
-- Pomyślna integracja z modułami z poprzednich iteracji
-- Demo zaakceptowane przez interesariuszy
+**Definition of Done dla tego zespołu:**
+- Kod napisany i zgodny ze standardami
+- Testy jednostkowe napisane (pokrycie ≥ 80%)
+- Code review wykonane i zatwierdzone
+- Testy integracyjne przechodzą
+- Dokumentacja API zaktualizowana
+- Brak defektów krytycznych
 
-### Przepływ procesu RUP — od wizji do wdrożenia
+### Sprint Retrospective — przykładowe wyniki
 
-```mermaid
-flowchart TD
-    subgraph "Inception"
-        I1["Zdefiniuj wizję<br/>produktu"] --> I2["Zidentyfikuj kluczowe<br/>przypadki użycia"]
-        I2 --> I3["Oceń ryzyka<br/>i wykonalność"]
-        I3 --> I4{{"Milestone: LO<br/>Go / No-Go"}}
-    end
+| Co poszło dobrze? | Co można poprawić? | Akcje na następny Sprint |
+|---|---|---|
+| Dobra współpraca przy US-25 | Za późno zaczęliśmy testy integracyjne | Testy integracyjne od 2. dnia Sprintu |
+| Szybka naprawa BUG-12 | Niejasne kryteria akceptacji US-26 | PO doprecyzuje kryteria przed planowaniem |
+| Daily Scrum skuteczne i krótkie | Brak automatyzacji deploymentu | Dodać task na CI/CD do następnego Sprintu |
 
-    subgraph "Elaboration"
-        I4 -->|"Go"| E1["Zaprojektuj<br/>architekturę bazową"]
-        E1 --> E2["Zbuduj prototyp<br/>architektoniczny"]
-        E2 --> E3["Doprecyzuj<br/>wymagania (80%)"]
-        E3 --> E4{{"Milestone: LA<br/>Architektura stabilna?"}}
-    end
+### Tablica Scrum (Sprint Board)
 
-    subgraph "Construction"
-        E4 -->|"Tak"| C1["Implementuj<br/>funkcjonalności"]
-        C1 --> C2["Testuj i integruj<br/>komponenty"]
-        C2 --> C3["Iteracja N"]
-        C3 -->|"Kolejna iteracja"| C1
-        C3 -->|"Gotowe"| C4{{"Milestone: IOC<br/>Gotowe do wdrożenia?"}}
-    end
-
-    subgraph "Transition"
-        C4 -->|"Tak"| T1["Testy akceptacyjne"]
-        T1 --> T2["Szkolenia<br/>użytkowników"]
-        T2 --> T3["Wdrożenie<br/>produkcyjne"]
-        T3 --> T4{{"Milestone: PR<br/>Product Release"}}
-    end
-
-    I4 -->|"No-Go"| STOP["Projekt anulowany"]
-
-    style I4 fill:#fff3e0,stroke:#e65100
-    style E4 fill:#fff3e0,stroke:#e65100
-    style C4 fill:#fff3e0,stroke:#e65100
-    style T4 fill:#e8f5e9,stroke:#2e7d32
-    style STOP fill:#fce4ec,stroke:#c62828
 ```
+┌─────────────┬─────────────┬─────────────┬─────────────┐
+│   TO DO     │ IN PROGRESS │  IN REVIEW  │    DONE     │
+├─────────────┼─────────────┼─────────────┼─────────────┤
+│ US-26       │ US-25       │ US-24       │ US-21       │
+│ Zapisz      │ Realizacja  │ Podsumowanie│ Dodaj do    │
+│ koszyk [5]  │ zamówienia  │ koszyka [5] │ koszyka [5] │
+│             │ [8]         │             │             │
+│             │             │             │ US-22       │
+│             │             │             │ Zmień       │
+│             │             │             │ ilość [3]   │
+│             │             │             │             │
+│             │             │             │ US-23       │
+│             │             │             │ Usuń [2]    │
+│             │             │             │             │
+│             │             │             │ BUG-12 [2]  │
+└─────────────┴─────────────┴─────────────┴─────────────┘
+```
+
+## Porównanie Scrum z innymi metodykami
+
+| Aspekt | Scrum | RUP | Waterfall (kaskadowy) |
+|---|---|---|---|
+| **Podejście** | Iteracyjno-przyrostowe, empiryczne | Iteracyjno-przyrostowe, planowe | Sekwencyjne, planowe |
+| **Iteracje** | Sprinty 1-4 tyg. | Iteracje 2-6 tyg. w ramach faz | Brak (jedna iteracja) |
+| **Dokumentacja** | Minimalna — działający software | Rozbudowana — >100 typów artefaktów | Rozbudowana — na każdym etapie |
+| **Planowanie** | Adaptacyjne (Sprint Planning) | Szczegółowe z góry (plan projektu) | Kompletne z góry |
+| **Architektura** | Emergentna, ewoluująca | Ustalana w fazie Elaboration | Ustalana w fazie projektowania |
+| **Rozmiar zespołu** | 3-9 osób | 10-100+ osób | Dowolny |
+| **Reagowanie na zmiany** | Szybkie (co Sprint) | Zarządzane (Change Request) | Trudne (wymaga powrotu do wcześniejszych faz) |
+| **Kiedy stosować** | Złożone problemy, zmieniające się wymagania | Duże projekty enterprise, regulacje | Stabilne wymagania, krótkie projekty |
 
 ## Podsumowanie
 
-1. **RUP (Rational Unified Process)** to formalna, iteracyjno-przyrostowa metodyka wytwarzania oprogramowania opracowana przez Rational Software (IBM). Definiuje kompletny framework procesu z fazami, dyscyplinami, rolami, artefaktami i najlepszymi praktykami.
+1. **Scrum** to lekki framework Agile oparty na empiryzmie (przejrzystość, inspekcja, adaptacja). Definiuje trzy role (Product Owner, Scrum Master, zespół deweloperski), pięć zdarzeń (Sprint, Sprint Planning, Daily Scrum, Sprint Review, Sprint Retrospective) i trzy artefakty (Product Backlog, Sprint Backlog, Increment).
 
-2. **Struktura RUP jest dwuwymiarowa** — wymiar czasowy obejmuje cztery fazy (Inception → Elaboration → Construction → Transition), a wymiar treściowy obejmuje dziewięć dyscyplin (od modelowania biznesowego po zarządzanie środowiskiem). Każda iteracja realizuje aktywności ze wszystkich dyscyplin, ale z różną intensywnością.
+2. **Sprint** to podstawowa jednostka pracy — timeboxowana iteracja (1-4 tygodnie), w której zespół dostarcza potencjalnie wdrażalny przyrost produktu spełniający Definition of Done.
 
-3. **Cztery fazy RUP** kończą się kamieniami milowymi z decyzją go/no-go: Inception (LO — cele cyklu życia), Elaboration (LA — architektura cyklu życia), Construction (IOC — początkowa zdolność operacyjna), Transition (PR — wydanie produktu).
+3. **Product Owner** odpowiada za wartość produktu i zarządza Product Backlog. **Scrum Master** służy zespołowi jako servant-leader, usuwając przeszkody. **Zespół deweloperski** jest samoorganizujący się i wielofunkcyjny.
 
-4. **Sześć najlepszych praktyk RUP** to: iteracyjne wytwarzanie, zarządzanie wymaganiami, architektura komponentowa, wizualne modelowanie (UML), ciągła weryfikacja jakości i zarządzanie zmianami.
+4. **Pięć wartości Scrum** (zaangażowanie, odwaga, skupienie, otwartość, szacunek) stanowi fundament kultury zespołu.
 
-5. **RUP jest konfigurowalny** — organizacja może dostosować proces do swoich potrzeb, wybierając odpowiedni podzbiór ról, artefaktów i aktywności. Nie jest to sztywna metodyka, lecz framework procesowy.
+5. **W porównaniu z RUP**, Scrum jest lżejszy, wymaga mniej dokumentacji i jest lepiej przystosowany do szybko zmieniających się wymagań. RUP jest bardziej formalny i lepiej sprawdza się w dużych projektach enterprise z rygorystycznymi wymaganiami regulacyjnymi.
 
-6. **W porównaniu z metodykami Agile**, RUP jest bardziej formalny, wymaga obszerniejszej dokumentacji i jest lepiej przystosowany do dużych projektów enterprise. Agile jest lżejszy i bardziej elastyczny, ale wymaga frameworków skalowania (SAFe, LeSS) dla dużych zespołów.
-
-7. **RUP opiera się na UML** jako podstawowym narzędziu modelowania i jest ściśle zintegrowany z narzędziami IBM Rational (Rose, ClearCase, RequisitePro), co zapewnia spójność procesu, ale może prowadzić do vendor lock-in.
+6. **Scrum nie jest kompletną metodyką** — jest frameworkiem, który celowo pozostawia wiele decyzji zespołowi. Praktyki inżynieryjne (TDD, CI/CD, pair programming) nie są częścią Scrum, ale są często stosowane razem z nim.
 
 ## Powiązane pytania
 
